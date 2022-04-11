@@ -2,10 +2,21 @@
 
 Plan: <br />
 
-1. Make Data generation <br />
-2. Add fitness for our problem <br />
-3. Add mutation for our problem <br />
-4. Make some plots <br />
-5. Add console keys support <br />
-6. ??? <br />
-7. Profit <br />
+1. ~~implement SSWM~~ <br />
+2. Make Data generation <br />
+  2.1 W_matrix <br />
+    ~~2.1.1 W_matrix C~~ <br />
+    2.1.2 W_matrix D <br />
+  2.2 B_matrix <br />
+  2.3 C_vector <br />
+  2.4 f_vector <br />
+  2.5 h <br />
+  2.6 sigma_function <br />
+    2.6.1 sigma_function A <br />
+    2.6.2 sigma_function B <br />
+3. Add fitness for our problem <br />
+4. Add mutation for our problem <br />
+5. Make some plots <br />
+6. Add console keys support <br />
+7. ??? <br />
+8. Profit <br />
