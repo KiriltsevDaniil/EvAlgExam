@@ -11,9 +11,11 @@ Plan: <br />
   2.3 C_vector <br />
   2.4 f_vector <br />
   ~~2.5 sigma_function~~ <br />
-    ~~2.5.1 sigma_function A ~~<br />
+    ~~2.5.1 sigma_function A~~ <br />
     ~~2.5.2 sigma_function B~~ <br />
 3. Add fitness for our problem <br />
+  3.1 add fitness function
+  3.2 add F_max
 4. Add mutation for our problem <br />
 5. Make our code work
 6. Make some plots <br />
