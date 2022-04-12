@@ -21,11 +21,12 @@ class SSWM:
 			self.fitness, self.F_max = fitness
 		else:
 			self.F_max = len(self.genotype)
+			self.fitness = self.test_fitness
 
 		if mutate == "flipper":
 			self.mutate = self.flipper
 
-	def fitness(self, genotype):
+	def test_fitness(self, genotype):
 		return sum(genotype)
 
 	def flipper(self, genotype):
