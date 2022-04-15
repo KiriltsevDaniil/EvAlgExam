@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 class SSWM:
 	'''
 	SSWM implementation
@@ -10,13 +10,20 @@ class SSWM:
 	T_stop - last generation limit [int]
 	beta - critical level of adaptation [0.0, 1.0]
 	'''
-	def __init__(self, genes=5, fitness=(None,None), mutate="flipper", \
-			T_stop=100, beta=0.95):
-
-		self.genotype = np.random.randint(2, size=genes)
+	def __init__(self, genotype=None, fitness=(None,None), mutate="flipper", \
+			T_stop=5000, beta=0.95):
+		
+		if type(genotype) == type(None):
+			self.genotype = np.random.randint(2, size=30)
+		else:
+			self.genotype = genotype
+		
 		self.T_stop = T_stop
 		self.beta = beta
-		self.fittest = None
+
+		self.generations = []
+		self.fitnesses = []
+		
 		if fitness != (None, None):
 			self.fitness, self.F_max = fitness
 		else:
@@ -25,6 +32,21 @@ class SSWM:
 
 		if mutate == "flipper":
 			self.mutate = self.flipper
+
+		self.fittest = None
+
+	def plotter(self):
+		fig = plt.figure()
+		ax = fig.add_subplot(1, 1, 1)
+		ax.xaxis.set_ticks_position('bottom')
+		ax.yaxis.set_ticks_position('left')
+		plt.axhline(y=self.F_max, color='r', label='Max Fitness')
+		plt.plot(self.generations, self.fitnesses, 'b', label='Fitness')
+		plt.grid()
+		plt.xlabel("Generation T")
+		plt.ylabel("Fitness F")
+		plt.legend(loc='upper left')
+		plt.show()
 
 	def test_fitness(self, genotype):
 		return sum(genotype)
@@ -49,10 +71,13 @@ class SSWM:
 			
 			if not silent:
 				print(f"Generation: {T}, Fitness: {gen_fitness}")
+			self.generations.append(T)
+			self.fitnesses.append(gen_fitness)
 			T += 1
 		self.fittest = self.genotype
 
 if __name__ == "__main__":
 	sswm = SSWM()
 	sswm.solver()
+	sswm.plotter()
 	print("\n", sswm.fittest)

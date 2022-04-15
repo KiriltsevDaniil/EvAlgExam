@@ -2,6 +2,10 @@ import numpy as np
 import math as m
 
 sigma_option = ["fermi", "identity"]
+W_types = ['C', 'D']
+
+def S_vector_gen(N=10):
+	return np.random.randint(2, size=N)
 
 def W_var_C_gen(K, M):
 	cases = [-1, 1]
@@ -28,12 +32,11 @@ def W_matrix_gen(opt='C', K=4, M=10):
 	assert M > 1, "Matrix should be bigger than 1x1"
 	assert K >= 0, "parameter K should be higher than -1"
 	assert K <= M, "parameter K can not be higher than M"
+	assert opt in W_types, "Matrix has to be either C or D type"
 	if opt == 'C':
 		W_matrix = W_var_C_gen(K, M)
 	elif opt == 'D':
 		W_matrix = W_var_D_gen(K, M)
-	else:
-		raise Exception("Matrix has to be either C or D type")
 	return W_matrix
 
 def sigma_f(opt="fermi"):
@@ -43,27 +46,25 @@ def sigma_f(opt="fermi"):
 		f_sigma = lambda z: z
 	return f_sigma
 
-def C_vector_gen(M=10):
+def C_vector_gen(M=10):#Right now it's boolean
+	#return np.random.randint(2, size=M)
 	return np.random.rand(M)
 
-def f_vector_gen(genotype, W_matrix, h=0.2, sigma_opt="fermi"):
+def F_vector_gen(genotype, W_matrix, h=0, sigma_opt="identity"):
 	assert sigma_opt in sigma_option, \
 	f"Choose one of the existing sigma functions: {sigma_option}"
 	sigma = sigma_f(sigma_opt)
-	f = []
+	f_v = []
+	genotype = np.resize(genotype, (1, len(W_matrix[0])))
 	for row in W_matrix:
-		summa = 0
-		i = 0
-		for element in row:
-			summa = element + genotype[i]
-			i += 1
-		f.append(sigma(summa - h))
-	return np.asarray(f)
+		f_v.append(sigma((row*genotype).sum() - h))
+	return np.asarray(f_v)
 
 
-def B_matrix_gen(M=10):
+def B_matrix_gen(M=10): #Right now it's boolean
+    #B_matrix = np.random.randint(2,size=(M,M))
     B_matrix = np.random.rand(M,M)
-    return B_matrix + B_matrix.T - np.diag(B_matrix.diagonal())
+    return np.tril(B_matrix) + np.tril(B_matrix, -1).T
 
 if __name__ == '__main__':
 	pass
