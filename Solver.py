@@ -56,7 +56,7 @@ class SSWM:
 		f_v_gen = dg.F_vector_gen(self.S_v, self.W_m)
 		gen_fitness = self.fitness(f_v_gen)
 		print(f"Start_fitness: {gen_fitness}", f"Max_fitness: {self.F_max*self.beta}")
-		while T < self.T_stop: and gen_fitness < self.F_max*self.beta:
+		while T < self.T_stop and gen_fitness < self.F_max*self.beta:
 			
 			f_v_gen = dg.F_vector_gen(self.S_v, self.W_m)
 			gen_fitness = self.fitness(f_v_gen)
