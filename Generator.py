@@ -3,7 +3,7 @@ import math
 
 
 class Generator:
-    def __init__(self, K, M, N):
+    def __init__(self, K, M, N, boolean):
 
         if M <= 1 or K < 0 or K > M:
             # checking if parameters satisfy W_matrix generation restrictions
@@ -18,6 +18,9 @@ class Generator:
             self.K = K
             self.M = M
             self.N = N
+
+        # determines if B_matrix and C_vector will be filled with boolean of float values
+        self.boolean = boolean
 
         self.sigma_options = ["fermi", "identity"]
         self.W_types = ['C', 'D']
@@ -60,14 +63,14 @@ class Generator:
         else:
             print("Matrix has to be either C or D type")
 
-    def C_vector(self, boolean=True):
-        if boolean:
+    def C_vector(self):
+        if self.boolean:
             return np.random.rand(self.M)
         else:
             return np.random.randint(2, size=self.M)
 
-    def B_matrix(self, boolean=True):
-        if boolean:
+    def B_matrix(self):
+        if self.boolean:
             B_matrix = np.random.rand(self.M, self.M)
         else:
             B_matrix = np.random.randint(2, size=(self.M, self.M))

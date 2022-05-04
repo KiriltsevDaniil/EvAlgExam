@@ -1,82 +1,106 @@
 import numpy as np
 import math as m
-from Generator import Generator as gen
+from Generator import Generator as Gen
 
 
+# Model class in MVP pattern, implementing the SSWM algorithm
 class SSWM:
-    '''Using SSWM in case of our problem'''
+    def __init__(self, K, M, N, boolean=True, mutator="flipper", \
+                 T_stop=2_000, beta_parameter=0.99, c_parameter=2, lambda_parameter=2, h=1, p_mut=0.5, record=True):
 
-    def __init__(self, K, M, N, mutate="flipper", \
-                 T_stop=2_000, beta=0.99, C_parm=2, lambda_parm=2, h=1, p_mut=0.5):
-
-        assert C_parm > 1, "C_parm has to be more than 1"
-        assert lambda_parm > 0, "lambda_parm has to be more than 0"
-
-        self.generator = gen(K, M, N)
+        # helper-class to generate matrices and vectors
+        self.generator = Gen(K, M, N, boolean)
 
         self.h = h
-        self.T_stop = T_stop
-        self.p_mut = p_mut
+        self.T_stop = T_stop    # maximum number of steps the algorithm can perform
+        self.p_mut = p_mut      # mutation probability
 
-        self.W_m = self.generator.W_matrix()
-        # print(self.W_m)
-        self.B_m = self.generator.B_matrix()
-        # print(self.B_m)
-        self.C_v = self.generator.C_vector()
-        # print(self.C_v)
+        # generating matrices and vector needed to start calculation
+        self.W = self.generator.W_matrix()
+        self.B = self.generator.B_matrix()
+        self.C = self.generator.C_vector()
 
-        self.C_parm = C_parm
-        self.lambda_parm = lambda_parm
-        self.beta = beta
+        # used to calculate proportion of "max_fitness", which "fitness" value must not cross
+        self.beta = beta_parameter
 
-        if mutate == "flipper":
-            self.mutate = self.flipper
+        # C parameter must be larger than 1
+        if c_parameter <= 1:
+            self.C_parameter = 2
+        else:
+            self.C_parameter = c_parameter
 
-        self.F_max = self.get_F_max()
+        # lambda parameter must be larger than 0
+        if lambda_parameter <= 0:
+            self.Lambda = 2
+        else:
+            self.Lambda = lambda_parameter
+
+        # selecting the mutate function for fitness vector
+        self.mutators = ["flipper"]
+        if mutator in self.mutators:
+            if mutator == self.mutators[0]:
+                self.mutate = self.flipper
+
+        self.max_fitness = self.get_F_max()
         self.fittest = None
 
-        self.generations = []
-        self.fitnesses = []
+        # determines if the algorithm will keep record of generations and their fitnesses
+        self.recording = record
 
-    def W(self, f_v):
-        return np.dot((self.B_m @ f_v.T), f_v) * 0.5 + np.dot(self.C_v, f_v)
+        if self.recording:
+            # arrays needed to build a plot after algorithm finishes work
+            self.generations = []
+            self.fitnesses = []
 
-    def fitness(self, f_v):
-        return self.C_parm * m.exp(self.lambda_parm * self.W(f_v))
+    def get_W(self, fitness_vector):
+        return np.dot((self.B @ fitness_vector.T), fitness_vector) * 0.5 + np.dot(self.C, fitness_vector)
+
+    def fitness(self, fitness_vector):
+        return self.C_parameter * m.exp(self.Lambda * self.get_W(fitness_vector))
 
     def get_F_max(self):
-        inv_B_m = np.linalg.inv(self.B_m)
-        W_max = -0.5 * np.dot(inv_B_m @ self.C_v.T, self.C_v)
-        return self.C_parm * m.exp(W_max)
+        # calculating max_fitness
+        inv_B_m = np.linalg.inv(self.B)
+        W_max = -0.5 * np.dot(inv_B_m @ self.C.T, self.C)
+        return self.C_parameter * m.exp(W_max)
 
     def flipper(self, genotype):
+        # basic mutator - coinflip
         for i in range(len(genotype)):
             if np.random.binomial(1, self.p_mut):
                 genotype[i] = 1 - genotype[i]
         return genotype
 
-    def solver(self, silent=False):
-        T = 0
-        self.S_v = self.generator.S_vector()
-        f_v_gen = self.generator.F_vector(self.S_v, self.W_m)
-        gen_fitness = self.fitness(f_v_gen)
-        print(f"Start_fitness: {gen_fitness}", f"Max_fitness: {self.F_max * self.beta}")
-        while T < self.T_stop and gen_fitness < self.F_max * self.beta:
+    def solver(self):
+        step = 0
+        # generating the initial genotype
+        self.genotype = self.generator.S_vector()
+        # calculating it's fitness
+        fitness_vector = self.generator.F_vector(self.genotype, self.W)
+        gen_fitness = self.fitness(fitness_vector)
 
-            f_v_gen = self.generator.F_vector(self.S_v, self.W_m)
-            gen_fitness = self.fitness(f_v_gen)
+        print(f"Start_fitness: {gen_fitness}", f"Max_fitness: {self.max_fitness * self.beta}")
 
-            next_gen = self.mutate(self.S_v.copy())
-            f_v_next_gen = self.generator.F_vector(next_gen, self.W_m)
-            next_gen_fitness = self.fitness(f_v_next_gen)
+        while step < self.T_stop and gen_fitness < self.max_fitness * self.beta:
 
-            F = next_gen_fitness - gen_fitness
-            if F > 0:
-                self.S_v = next_gen
+            fitness_vector = self.generator.F_vector(self.genotype, self.W)
+            gen_fitness = self.fitness(fitness_vector)
 
-            if not silent:
-                print(f"Generation: {T}, Fitness: {gen_fitness}, diff: {F}, Gens:{self.S_v}/{next_gen}")
-                self.generations.append(T)
+            # mutating the genotype
+            next_gen = self.mutate(self.genotype.copy())
+            # calculating new genotype's fitness
+            NG_fitness_vector = self.generator.F_vector(next_gen, self.W)
+            next_gen_fitness = self.fitness(NG_fitness_vector)
+
+            # if next_gen fitness is greater than fitness of current generation - the fittest survives
+            delta_F = next_gen_fitness - gen_fitness
+            if delta_F > 0:
+                self.genotype = next_gen
+
+            if self.recording:
+                print(f"Generation: {step}, Fitness: {gen_fitness}, diff: {abs(delta_F)}, Gens:{self.genotype}/{next_gen}")
+                self.generations.append(step)
                 self.fitnesses.append(gen_fitness)
-            T += 1
-        self.fittest = self.S_v
+            step += 1
+
+        self.fittest = self.genotype
