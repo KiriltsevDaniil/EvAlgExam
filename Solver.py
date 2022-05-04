@@ -1,19 +1,25 @@
 import numpy as np
 import math as m
+
 from Generator import Generator as Gen
+import Observer as Obs
 
 
 # Model class in MVP pattern, implementing the SSWM algorithm
-class SSWM:
-    def __init__(self, K, M, N, boolean=True, mutator="flipper", \
-                 T_stop=2_000, beta_parameter=0.99, c_parameter=2, lambda_parameter=2, h=1, p_mut=0.5, record=True):
+class SSWM(Obs.Publisher):
+    def __init__(self, K, M, N, subscriber: Obs.Observer, boolean=True, mutator="flipper", T_stop=2_000,
+                 beta_parameter=0.99, c_parameter=2,
+                 lambda_parameter=2, h=1, p_mut=0.5, record=True):
+
+        # call to parent class init, to ensure publisher-subscriber relation between SSWM and Presenter
+        super().__init__(subscriber)
 
         # helper-class to generate matrices and vectors
         self.generator = Gen(K, M, N, boolean)
 
         self.h = h
-        self.T_stop = T_stop    # maximum number of steps the algorithm can perform
-        self.p_mut = p_mut      # mutation probability
+        self.T_stop = T_stop  # maximum number of steps the algorithm can perform
+        self.p_mut = p_mut  # mutation probability
 
         # generating matrices and vector needed to start calculation
         self.W = self.generator.W_matrix()
@@ -79,7 +85,8 @@ class SSWM:
         fitness_vector = self.generator.F_vector(self.genotype, self.W)
         gen_fitness = self.fitness(fitness_vector)
 
-        print(f"Start_fitness: {gen_fitness}", f"Max_fitness: {self.max_fitness * self.beta}")
+        # print(f"Start_fitness: {gen_fitness}", f"Max_fitness: {self.max_fitness * self.beta}")
+        self.notify(f"Start_fitness: {gen_fitness}, Max_fitness: {self.max_fitness * self.beta}")
 
         while step < self.T_stop and gen_fitness < self.max_fitness * self.beta:
 
@@ -98,7 +105,10 @@ class SSWM:
                 self.genotype = next_gen
 
             if self.recording:
-                print(f"Generation: {step}, Fitness: {gen_fitness}, diff: {abs(delta_F)}, Gens:{self.genotype}/{next_gen}")
+                # print(
+                #     f"Generation: {step}, Fitness: {gen_fitness}, diff: {abs(delta_F)}, Gens:{self.genotype}/{next_gen}")
+                self.notify(f"Generation: {step}, Fitness: {gen_fitness}, "
+                            f"diff: {abs(delta_F)}, Gens:{self.genotype}/{next_gen}")
                 self.generations.append(step)
                 self.fitnesses.append(gen_fitness)
             step += 1
