@@ -1,12 +1,13 @@
 import matplotlib.pyplot as plt
 
 
-# View module from MVP pattern. Builds a pyplot on initialization
+# View class from MVP pattern. Builds a pyplot on initialization
 # and calls pyplot.show if pyplot was built successfully
 class View:
-    def __init__(self, f_max, generations, fitnesses, seed):
+    def __init__(self):
         self.chart = plt.figure()
 
+    def fill_chart(self, f_max, generations, fitnesses, seed):
         ax = self.chart.add_subplot(1, 1, 1)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
@@ -19,8 +20,9 @@ class View:
         plt.legend(loc='upper left')
         plt.figtext(0.87, 0.01, caption, wrap=True, horizontalalignment='left', fontsize=12)
 
-    def show(self):
+    def show(self, result_genotype):
         if self.chart is not None:
             plt.show()
+            print(f"the fittest genotype: {result_genotype}")
         else:
             print("Nothing to show...")

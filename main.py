@@ -1,19 +1,9 @@
-import Solver as slvr
-import numpy as np
-
-from View import View
-
-r_seed = np.random.randint(10000)
-np.random.seed(r_seed)
-
+from Presenter import Presenter
 
 K=2
 M=5
 N=5
 
-sswm = slvr.SSWM(K, M, N)
-sswm.solver()
-print("\n", sswm.fittest)
+solver = Presenter(K, M, N)
+solver.run_algorithm()
 
-plot = View(sswm.F_max, sswm.generations, sswm.fitnesses, r_seed)
-plot.show()
