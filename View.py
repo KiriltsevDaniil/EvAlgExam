@@ -27,6 +27,3 @@ class View:
             print(f"the fittest genotype: {result_genotype}")
         else:
             print("Nothing to show...")
-
-    def console_output(self, msg):
-        print(msg)
