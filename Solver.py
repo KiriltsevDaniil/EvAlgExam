@@ -7,7 +7,9 @@ import Observer as Obs
 
 # Model class in MVP pattern, implementing the SSWM algorithm
 class SSWM(Obs.Publisher):
-    def __init__(self, K, M, N, subscriber: Obs.Observer, boolean=True, mutator="flipper", T_stop=2_000,
+    def __init__(self, K, M, N, subscriber: Obs.Observer,
+                 boolean=True, W_type="C", sigma_func="identity",
+                 mutator="flipper", T_stop=2_000,
                  beta_parameter=0.99, c_parameter=2,
                  lambda_parameter=2, h=1, p_mut=0.5, record=True):
 
@@ -15,7 +17,7 @@ class SSWM(Obs.Publisher):
         super().__init__(subscriber)
 
         # helper-class to generate matrices and vectors
-        self.generator = Gen(K, M, N, boolean)
+        self.generator = Gen(K, M, N, boolean, W_type, sigma_func)
 
         self.h = h
         self.T_stop = T_stop  # maximum number of steps the algorithm can perform
@@ -85,7 +87,6 @@ class SSWM(Obs.Publisher):
         fitness_vector = self.generator.F_vector(self.genotype, self.W)
         gen_fitness = self.fitness(fitness_vector)
 
-        # print(f"Start_fitness: {gen_fitness}", f"Max_fitness: {self.max_fitness * self.beta}")
         self.notify(f"Start_fitness: {gen_fitness}, Max_fitness: {self.max_fitness * self.beta}")
 
         while step < self.T_stop and gen_fitness < self.max_fitness * self.beta:
@@ -105,8 +106,6 @@ class SSWM(Obs.Publisher):
                 self.genotype = next_gen
 
             if self.recording:
-                # print(
-                #     f"Generation: {step}, Fitness: {gen_fitness}, diff: {abs(delta_F)}, Gens:{self.genotype}/{next_gen}")
                 self.notify(f"Generation: {step}, Fitness: {gen_fitness}, "
                             f"diff: {abs(delta_F)}, Gens:{self.genotype}/{next_gen}")
                 self.generations.append(step)
