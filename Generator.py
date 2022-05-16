@@ -1,9 +1,13 @@
 import numpy as np
 import math
 
+from Generator_interface import IGenerator
 
-class Generator:
+
+class Generator(IGenerator):
     def __init__(self, K, M, N, boolean, W_type, sigma):
+        # call to parent initializer to maintain OOP
+        super().__init__()
 
         if M <= 1 or K < 0 or K > M:
             # checking if parameters satisfy W_matrix generation restrictions
@@ -22,19 +26,17 @@ class Generator:
         # determines if B_matrix and C_vector will be filled with boolean of float values
         self.boolean = boolean
 
-        self.sigma_options = ["identity", "fermi"]
         # determining the sigma function used to generate fitness vector
         if sigma in self.sigma_options:
             self.sigma = sigma
         else:
-            self.sigma = self.sigma_options[0]
+            self.sigma = self.sigma_options[0]  # identity
 
-        self.W_matrix_types = ['C', 'D']
         # determining the type of W matrix generated
         if W_type in self.W_matrix_types:
             self.W_matrix_type = W_type
         else:
-            self.W_matrix_type = self.W_matrix_types[0]
+            self.W_matrix_type = self.W_matrix_types[0] # C
 
     def S_vector(self):
         return np.random.randint(2, size=self.N)
@@ -94,3 +96,4 @@ class Generator:
             f_vector.append(sigma((row * genotype).sum() - h))
 
         return np.asarray(f_vector)
+

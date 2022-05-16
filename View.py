@@ -23,6 +23,7 @@ class View:
     def show(self, result_genotype):
         if self.chart is not None:
             plt.show()
+            print()
             print(f"the fittest genotype: {result_genotype}")
         else:
             print("Nothing to show...")
