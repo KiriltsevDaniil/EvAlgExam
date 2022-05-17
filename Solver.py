@@ -60,13 +60,13 @@ class SSWM():
         return np.dot((self.B @ fitness_vector.T), fitness_vector) * 0.5 + np.dot(self.C, fitness_vector)
 
     def fitness(self, fitness_vector):
-        return self.C_parameter * m.exp(self.Lambda * self.get_W(fitness_vector))
+        return self.get_W(fitness_vector)
 
     def get_F_max(self):
         # calculating max_fitness
         inv_B_m = np.linalg.inv(self.B)
         W_max = -0.5 * np.dot(inv_B_m @ self.C.T, self.C)
-        return self.C_parameter * m.exp(W_max)
+        return W_max
 
     def flipper(self, genotype):
         # basic mutator - coinflip
@@ -85,7 +85,7 @@ class SSWM():
 
         print(f"Start_fitness: {gen_fitness}", f"Max_fitness: {self.max_fitness * self.beta}")
 
-        while step < self.T_stop and gen_fitness < self.max_fitness * self.beta:
+        while step < self.T_stop: #and gen_fitness < self.max_fitness * self.beta:
 
             fitness_vector = self.generator.F_vector(self.genotype, self.W)
             gen_fitness = self.fitness(fitness_vector)

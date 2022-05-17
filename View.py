@@ -11,7 +11,7 @@ class View:
         ax = self.chart.add_subplot(1, 1, 1)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
-        plt.axhline(y=f_max, color='r', label='Max Fitness')
+        # plt.axhline(y=f_max, color='r', label='Max Fitness')
         plt.plot(generations, fitnesses, 'b', label='Fitness')
         plt.grid()
         caption = f"seed: {seed}"

@@ -8,9 +8,9 @@ from View import View
 class Presenter():
     def __init__(self, show_result=True):
 
-        K = 2
-        M = 5
-        N = 5
+        K = 30
+        M = 50
+        N = 50
 
         # generating a seed for further random generator usage
         self.seed = np.random.randint(10000)
