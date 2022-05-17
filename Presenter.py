@@ -6,7 +6,11 @@ from View import View
 
 # Presenter class of MVP pattern
 class Presenter():
-    def __init__(self, K: int, M: int, N: int, show_result=True):
+    def __init__(self, show_result=True):
+
+        K = 2
+        M = 5
+        N = 5
 
         # generating a seed for further random generator usage
         self.seed = np.random.randint(10000)
