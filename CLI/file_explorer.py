@@ -23,7 +23,9 @@ class FileExplorer:
             "record": 1
         }
 
-        self.open_file()
+        # self.open_file()
+        self.file = open(self.path, "w+")
+        json.dump(self.parameters, self.file, indent="\t")
 
     def open_file(self, mode="r"):
 
@@ -31,9 +33,8 @@ class FileExplorer:
         try:
             self.file = open(self.path, mode)
         except FileNotFoundError:
-            self.file_output(self.parameters)
-            self.close_file()
-            self.file = open(self.path, mode)
+            self.file = open(self.path, "w+")
+            json.dump(self.parameters, self.file, indent="\t")
 
         if self.file.closed:
             print(f"Couldn't open file at {self.path}")
