@@ -71,7 +71,7 @@ class SSWM():
     def flipper(self, genotype):
         # basic mutator - coinflip
         for i in range(len(genotype)):
-            if np.random.binomial(1, self.p_mut):
+            if np.random.choice([0, 1], p=[1-self.p_mut, self.p_mut]):
                 genotype[i] = 1 - genotype[i]
         return genotype
 
