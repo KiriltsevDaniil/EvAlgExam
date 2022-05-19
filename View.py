@@ -11,14 +11,14 @@ class View:
         ax = self.chart.add_subplot(1, 1, 1)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
+        ax.set_title(f"seed: {seed}")
         # plt.axhline(y=f_max, color='r', label='Max Fitness')
         plt.plot(generations, fitnesses, 'b', label='Fitness')
         plt.grid()
-        caption = f"seed: {seed}"
         plt.xlabel("Generation T")
         plt.ylabel("Fitness F")
-        plt.legend(loc='upper left')
-        plt.figtext(0.87, 0.01, caption, wrap=True, horizontalalignment='left', fontsize=12)
+        plt.legend(loc='best')
+
 
     def show(self, result_genotype):
         if self.chart is not None:
