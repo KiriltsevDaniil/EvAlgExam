@@ -1,8 +1,8 @@
 {
-	"K": 3,
-	"M": 5,
-	"N": 5,
-	"bool": 1,
+	"K": 12,
+	"M": 13,
+	"N": 15,
+	"bool": true,
 	"W_type": "C",
 	"Sigma": "identity",
 	"Mutator": "flipper",

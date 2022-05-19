@@ -41,20 +41,20 @@ class Presenter():
         parameters = self.file_input.get_from_file()
 
         self.model = SSWM(
-            K=int(parameters["K"]),
-            M=int(parameters["M"]),
-            N=int(parameters["N"]),
-            boolean=bool(parameters["bool"]),
+            K=parameters["K"],
+            M=parameters["M"],
+            N=parameters["N"],
+            boolean=parameters["bool"],
             W_type=parameters["W_type"],
             sigma_func=parameters["Sigma"],
             mutator=parameters["Mutator"],
-            T_stop=int(parameters["T_stop"]),
-            beta_parameter=float(parameters["b"]),
-            c_parameter=float(parameters["c"]),
-            lambda_parameter=float(parameters["lambda"]),
-            h=float(parameters["h"]),
-            p_mut=float(parameters["p_mut"]),
-            record=bool(parameters["record"])
+            T_stop=parameters["T_stop"],
+            beta_parameter=parameters["b"],
+            c_parameter=parameters["c"],
+            lambda_parameter=parameters["lambda"],
+            h=parameters["h"],
+            p_mut=parameters["p_mut"],
+            record=parameters["record"]
         )
 
     def get_data(self):
