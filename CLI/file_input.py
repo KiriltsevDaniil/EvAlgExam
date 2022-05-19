@@ -1,29 +1,14 @@
-import json
+from . import file_explorer
 
 
-class FileInput():
+class FileInput(file_explorer.FileExplorer):
     def __init__(self):
-        self.path = "./data/config.json"
-        self.parameters = {
-            "K": 0,
-            "M": 0,
-            "N": 0,
-            "bool": 0,
-            "W_type": 0,
-            "Sigma": 0,
-            "Mutator": 0,
-            "T_stop": 0,
-            "b": 0,
-            "c": 0,
-            "lambda": 0,
-            "h": 0,
-            "p_mut": 0,
-            "record": 0
-        }
+        super().__init__()
 
     def data_input(self):
-        with open(self.path, "r") as file:
-            self.parameters = json.load(file)
+        self.open_file()
+        self.file_input()
+        self.close_file()
 
     def get_data(self):
         return self.parameters

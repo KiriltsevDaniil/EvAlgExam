@@ -1,0 +1,16 @@
+{
+	"K": 3,
+	"M": 5,
+	"N": 5,
+	"bool": 1,
+	"W_type": "C",
+	"Sigma": "identity",
+	"Mutator": "flipper",
+	"T_stop": 2000,
+	"b": 2,
+	"c": 2,
+	"lambda": 1,
+	"h": 1,
+	"p_mut": 0.5,
+	"record": 1
+}
