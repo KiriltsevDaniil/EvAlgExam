@@ -14,6 +14,13 @@ class ConsoleInput(file_explorer.FileExplorer):
             if i >= len(data):
                 break
 
-            self.parameters[key] = data[i]
+            if key == "K" or key == "M" or key == "N" or key == "T_stop":
+                self.parameters[key] = int(data[i])
+            elif key == "bool" or key == "record":
+                self.parameters[key] = bool(data[i])
+            elif key == "W_type" or key == "Sigma" or key == "Mutator":
+                self.parameters[key] = data[i]
+            else:
+                self.parameters[key] = float(data[i])
 
         self.file_output(self.parameters)
