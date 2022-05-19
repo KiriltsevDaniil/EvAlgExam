@@ -15,7 +15,7 @@ Plan: <br />
 3. ~~Add fitness for our problem~~  <br />
   3.1 ~~add fitness function~~ <br />
   3.2 ~~add F_max~~ <br />
-4. Add mutation for our problem <br />
-5. Make plots <br />
-6. Testing <br />
+4. ~~Add mutation for our problem~~ <br />
+5. ~~Make plots~~ <br />
+6. ~~Testing~~ <br />
 7. CLI <br />
