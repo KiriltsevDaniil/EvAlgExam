@@ -12,7 +12,7 @@ class Generator(IGenerator):
         if M <= 1 or K < 0 or K > M:
             # checking if parameters satisfy W_matrix generation restrictions
             # if the don't - replace them with the standard 2-5-5
-            self.K = 2
+            self.K = 3
             self.M = 5
             self.N = 5
 

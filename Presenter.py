@@ -1,5 +1,3 @@
-import fileinput
-
 import numpy as np
 
 from Solver import SSWM
@@ -12,7 +10,7 @@ from CLI import file_input
 class Presenter():
     def __init__(self):
 
-        self.file_explorer = file_input.FileInput()
+        self.file_input = file_input.FileInput()
 
         # generating a seed for further random generator usage
         self.seed = np.random.randint(10000)
@@ -35,9 +33,9 @@ class Presenter():
         self.view.show(self.model.fittest)
 
     def initialize_model(self):
-        self.file_explorer.data_input()
+        self.file_input.data_input()
 
-        parameters = self.file_explorer.get_data()
+        parameters = self.file_input.get_data()
 
         self.model = SSWM(
             K=parameters["K"],
