@@ -1,23 +1,25 @@
+import fileinput
+
 import numpy as np
 
 from Solver import SSWM
 from View import View
 
+from CLI import file_input
+
 
 # Presenter class of MVP pattern
 class Presenter():
-    def __init__(self, show_result=True):
+    def __init__(self):
 
-        K = 3
-        M = 5
-        N = 5
+        self.file_explorer = file_input.FileInput()
 
         # generating a seed for further random generator usage
         self.seed = np.random.randint(10000)
         np.random.seed(self.seed)
 
         # establishing Model and View modules
-        self.model = SSWM(K, M, N, record=show_result)
+        self.initialize_model()
         self.view = View()
 
     def run_algorithm(self):
@@ -31,3 +33,28 @@ class Presenter():
 
     def get_result(self):
         self.view.show(self.model.fittest)
+
+    def initialize_model(self):
+        self.file_explorer.data_input()
+
+        parameters = self.file_explorer.get_data()
+
+        self.model = SSWM(
+            K=parameters["K"],
+            M=parameters["M"],
+            N=parameters["N"],
+            boolean=parameters["bool"],
+            W_type=parameters["W_type"],
+            sigma_func=parameters["Sigma"],
+            mutator=parameters["Mutator"],
+            T_stop=parameters["T_stop"],
+            beta_parameter=parameters["b"],
+            c_parameter=parameters["c"],
+            lambda_parameter=parameters["lambda"],
+            h=parameters["h"],
+            p_mut=parameters["p_mut"],
+            record=parameters["record"]
+        )
+
+
+
