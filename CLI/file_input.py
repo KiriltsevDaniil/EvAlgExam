@@ -10,7 +10,8 @@ class FileInput(file_explorer.FileExplorer):
         self.file_input()
         self.close_file()
 
-    def get_data(self):
+    def get_from_file(self):
+        self.data_input()
         return self.parameters
 
 
