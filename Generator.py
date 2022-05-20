@@ -8,7 +8,6 @@ class Generator(IGenerator):
     def __init__(self, K, M, N, boolean, W_type, sigma):
         # call to parent initializer to maintain OOP
         super().__init__()
-
         if M <= 1 or K < 0 or K > M:
             # checking if parameters satisfy W_matrix generation restrictions
             # if the don't - replace them with the standard 2-5-5
@@ -72,12 +71,23 @@ class Generator(IGenerator):
             return np.random.randint(2, size=self.M)
 
     def B_matrix(self):
-        if self.boolean:
-            B_matrix = np.random.rand(self.M, self.M)
-        else:
-            B_matrix = np.random.randint(2, size=(self.M, self.M))
+        not_generated = True
+        while not_generated:
+            
+            if self.boolean:
+                B_matrix = np.random.rand(self.M, self.M)
+                B_matrix = np.tril(B_matrix) + np.tril(B_matrix, -1).T
+            else:
+                B_matrix = np.random.randint(2, size=(self.M, self.M))
+                B_matrix = np.tril(B_matrix) + np.tril(B_matrix, -1).T
+            
+            try:
+                np.linalg.inv(B_matrix)
+                not_generated = False
+            except:
+                not_generated = True
 
-        return np.tril(B_matrix) + np.tril(B_matrix, -1).T
+        return B_matrix
 
     def sigma_func(self):
         # function to determine sigma_function needed in calculation of F_vector

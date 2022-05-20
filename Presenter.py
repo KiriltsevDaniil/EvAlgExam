@@ -9,36 +9,46 @@ from CLI import console_input
 
 # Presenter class of MVP pattern
 class Presenter():
-    def __init__(self):
+    def __init__(self, exp=False, params=None):
 
         # Initializing console and file handlers
-        self.file_input = file_input.FileInput()
-        self.console_input = console_input.ConsoleInput()
+        if not exp:
+            self.file_input = file_input.FileInput()
+            self.console_input = console_input.ConsoleInput()
 
-        self.get_data()
+            self.get_data()
 
         # generating a seed for further random generator usage
         self.seed = np.random.randint(10000)
         np.random.seed(self.seed)
 
         # establishing Model and View modules
-        self.initialize_model()
-        self.view = View()
+        if not exp:
+            self.initialize_model()
+            self.view = View()
+        else:
+            self.initialize_model(True, params=params)
 
-    def run_algorithm(self):
+    def run_algorithm(self, very_noisy=True):
         self.model.solver()
-        self.view.fill_chart(self.model.max_fitness,
-                             self.model.generations,
-                             self.model.fitnesses,
-                             self.seed)
+        if very_noisy:
+            self.view.fill_chart(self.model.max_fitness,
+                                 self.model.generations,
+                                 self.model.fitnesses,
+                                 self.seed)
 
-        self.get_result()
+        return self.get_result(False)
 
-    def get_result(self):
-        self.view.show(self.model.fittest)
+    def get_result(self, very_noisy=True):
+        if very_noisy:
+            self.view.show(self.model.fittest)
+        return self.model.experiment_max #!!!!!!!!!!!!!!!!
 
-    def initialize_model(self):
-        parameters = self.file_input.get_from_file()
+    def initialize_model(self, exp=False, params=None):
+        if exp:
+            parameters = params
+        else:
+            parameters = self.file_input.get_from_file()
 
         self.model = SSWM(
             K=parameters["K"],

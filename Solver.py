@@ -47,6 +47,7 @@ class SSWM():
 
         self.max_fitness = self.get_F_max()
         self.fittest = None
+        self.experiment_max = None
 
         # determines if the algorithm will keep record of generations and their fitnesses
         self.recording = record
@@ -76,6 +77,7 @@ class SSWM():
         return genotype
 
     def solver(self):
+        loading = ["\\", "|", "/", "-"]
         step = 0
         # generating the initial genotype
         self.genotype = self.generator.S_vector()
@@ -89,6 +91,7 @@ class SSWM():
 
             fitness_vector = self.generator.F_vector(self.genotype, self.W)
             gen_fitness = self.fitness(fitness_vector)
+            self.experiment_max = gen_fitness
 
             # mutating the genotype
             next_gen = self.mutate(self.genotype.copy())
@@ -100,11 +103,14 @@ class SSWM():
             delta_F = next_gen_fitness - gen_fitness
             if delta_F > 0:
                 self.genotype = next_gen
+                self.experiment_max = gen_fitness
 
             if self.recording:
                 print(f"Generation: {step}, Fitness: {gen_fitness}, diff: {delta_F}, Gens:{self.genotype}/{next_gen}")
                 self.generations.append(step)
                 self.fitnesses.append(gen_fitness)
+            else:
+                loading[step%4]
             step += 1
 
         self.fittest = self.genotype
